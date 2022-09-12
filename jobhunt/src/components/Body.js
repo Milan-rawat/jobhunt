@@ -6,6 +6,26 @@ function Body() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
+  const addJob = async (e) => {
+    e.preventDefault();
+    const res = await fetch(`http://localhost:8000/job`, {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        from: user,
+      }),
+    });
+    const response = JSON.parse(await res.text());
+    setTitle("");
+    setDescription("");
+    alert("Job Added");
+  };
+
   return (
     <>
       <div className={classes.userSelection}>
@@ -24,7 +44,7 @@ function Body() {
       </div>
       {user === "a" && (
         <div className={`${classes.jobFormBox} ${classes.bodyBox}`}>
-          <form className={classes.jobForm}>
+          <form className={classes.jobForm} onSubmit={addJob}>
             <div className={classes.inputControl}>
               <label>Job Title</label>
               <input
@@ -32,6 +52,7 @@ function Body() {
                 placeholder="Job Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                required
               />
             </div>
             <div className={classes.inputControl}>
@@ -41,9 +62,10 @@ function Body() {
                 placeholder="Job Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                required
               />
             </div>
-            <button>Post Job</button>
+            <button type="submit">Post Job</button>
           </form>
         </div>
       )}
