@@ -12,4 +12,13 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const jobs = await Job.find();
+    res.status(201).json(jobs);
+  } catch (e) {
+    res.status(500).json({ msg: "Something went wrong" });
+  }
+});
+
 module.exports = router;

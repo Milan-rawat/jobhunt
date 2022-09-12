@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import classes from "./Body.module.css";
 
 function Body() {
   const [user, setUser] = useState("a");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [jobs, setJobs] = useState([]);
 
   const addJob = async (e) => {
     e.preventDefault();
@@ -21,10 +22,28 @@ function Body() {
       }),
     });
     const response = JSON.parse(await res.text());
-    setTitle("");
-    setDescription("");
-    alert("Job Added");
+    if (response) {
+      setTitle("");
+      setDescription("");
+      alert("Job Added");
+    }
   };
+
+  const fetchJobs = async () => {
+    const res = await fetch(`http://localhost:8000/job`, {
+      method: "get",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+    const response = JSON.parse(await res.text());
+    setJobs(response);
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  });
 
   return (
     <>
@@ -71,7 +90,15 @@ function Body() {
       )}
       {user === "b" && (
         <div className={`${classes.jobPosts} ${classes.bodyBox}`}>
-          Job Posts
+          <div className={classes.jobCardBox}>
+            {jobs.map((job, idx) => (
+              <div key={idx} className={classes.jobCard}>
+                <h1>{job.title}</h1>
+                <h4>{job.description}</h4>
+                <p>From :- {job.from}</p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </>
