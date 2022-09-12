@@ -1,0 +1,21 @@
+.header {
+  width: 100%;
+  height: 70px;
+  background-color: cadetblue;
+  box-shadow: 0 0 6px black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 50px;
+}
+
+.logo {
+  font-size: 36px;
+  color: white;
+  font-weight: bolder;
+}
+
+.navs {
+  display: flex;
+  align-items: center;
+}
