@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import classes from "./Body.module.css";
+import { socket } from "../global/socket";
 
 function Body() {
   const [user, setUser] = useState("a");
@@ -9,28 +10,30 @@ function Body() {
 
   const addJob = async (e) => {
     e.preventDefault();
-    const res = await fetch(`http://localhost:8000/job`, {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: title,
-        description: description,
-        from: user,
-      }),
-    });
-    const response = JSON.parse(await res.text());
-    if (response) {
-      setTitle("");
-      setDescription("");
-      alert("Job Added");
-    }
+    // const res = await fetch(`http://localhost:8000/job`, {
+    //   method: "post",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     title: title,
+    //     description: description,
+    //     from: user,
+    //   }),
+    // });
+    // const response = JSON.parse(await res.text());
+
+    socket.emit("postJob", { title, description, user });
+    // if (response) {
+    setTitle("");
+    setDescription("");
+    alert("Job Added");
+    // }
   };
 
   const fetchJobs = async () => {
-    const res = await fetch(`http://localhost:8000/job`, {
+    const res = await fetch(`http://localhost:5000/job`, {
       method: "get",
       headers: {
         Accept: "application/json",
@@ -43,7 +46,7 @@ function Body() {
 
   useEffect(() => {
     fetchJobs();
-  });
+  }, []);
 
   return (
     <>
