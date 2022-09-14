@@ -35,6 +35,18 @@ io.on("connection", (socket) => {
     }).populate("job");
     socket.broadcast.emit("jobNotifications", notification);
   });
+
+  socket.on("acceptJob", async ({ job }) => {
+    const newNotification = await Notification.create({
+      message: "Job Accepted!",
+      job: job._id,
+    });
+    const notification = await Notification.findOne({
+      _id: newNotification._id,
+    }).populate("job");
+
+    socket.broadcast.emit("acceptNotification", notification);
+  });
 });
 
 app.use("/job", jobRouter);

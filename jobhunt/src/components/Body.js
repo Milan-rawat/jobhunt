@@ -48,6 +48,10 @@ function Body() {
     fetchJobs();
   }, []);
 
+  const acceptJob = (job) => {
+    socket.emit("acceptJob", { job });
+  };
+
   return (
     <>
       <div className={classes.userSelection}>
@@ -99,6 +103,7 @@ function Body() {
                 <h1>{job.title}</h1>
                 <h4>{job.description}</h4>
                 <p>From :- {job.from}</p>
+                <button onClick={() => acceptJob(job)}>Accept Job</button>
               </div>
             ))}
           </div>

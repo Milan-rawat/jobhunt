@@ -34,6 +34,15 @@ function Header() {
     setUnread(temp);
   });
 
+  socket.off("acceptNotification").on("acceptNotification", (notification) => {
+    let allCN = currentNotifications;
+    allCN.push(notification);
+    setCurrentNotifications(allCN);
+
+    let temp = unread + 1;
+    setUnread(temp);
+  });
+
   const fetchNotifications = async () => {
     const res = await fetch(`http://localhost:5000/notifications`, {
       method: "get",
@@ -42,7 +51,7 @@ function Header() {
         "Content-Type": "application/json",
       },
     });
-    // const response = 
+    // const response =
     JSON.parse(await res.text());
   };
 
@@ -98,15 +107,11 @@ function Header() {
                 }}
               >
                 {notification.message}
-                <p style={{ fontSize: 12 }}>
-                  Title: {notification.job.title}
-                </p>
+                <p style={{ fontSize: 12 }}>Title: {notification.job.title}</p>
                 <p style={{ fontSize: 12 }}>
                   Description: {notification.job.description}
                 </p>
-                <p style={{ fontSize: 12 }}>
-                  From: {notification.job.from}
-                </p>
+                <p style={{ fontSize: 12 }}>From: {notification.job.from}</p>
               </MenuItem>
             ))
           ) : (
