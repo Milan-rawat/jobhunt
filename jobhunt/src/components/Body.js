@@ -48,7 +48,7 @@ function Body() {
     fetchJobs();
     // changeUserHandler(user);
     socket.emit("changeUser", { userTo: user, userFrom: null });
-  }, []);
+  }, [user]);
 
   const acceptJob = (job) => {
     socket.emit("acceptJob", { job, acceptedBy: user });
