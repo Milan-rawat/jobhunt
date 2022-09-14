@@ -36,16 +36,21 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("jobNotifications", notification);
   });
 
-  socket.on("acceptJob", async ({ job }) => {
+  socket.on("changeUser", async ({ userTo, userFrom }) => {
+    socket.join(userTo);
+    socket.leave(userFrom);
+  });
+
+  socket.on("acceptJob", async ({ job, acceptedBy }) => {
     const newNotification = await Notification.create({
-      message: "Job Accepted!",
+      message: `${acceptedBy} accepted your Job`,
       job: job._id,
     });
     const notification = await Notification.findOne({
       _id: newNotification._id,
     }).populate("job");
-
-    socket.broadcast.emit("acceptNotification", notification);
+    io.to(job.from).emit("acceptNotification", notification);
+    // socket.broadcast.emit("acceptNotification", notification);
   });
 });
 

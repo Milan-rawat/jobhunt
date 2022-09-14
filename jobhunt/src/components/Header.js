@@ -35,6 +35,7 @@ function Header() {
   });
 
   socket.off("acceptNotification").on("acceptNotification", (notification) => {
+    console.log("notification==========", notification)
     let allCN = currentNotifications;
     allCN.push(notification);
     setCurrentNotifications(allCN);

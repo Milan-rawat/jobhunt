@@ -46,10 +46,18 @@ function Body() {
 
   useEffect(() => {
     fetchJobs();
+    // changeUserHandler(user);
+    socket.emit("changeUser", { userTo: user, userFrom: null });
   }, []);
 
   const acceptJob = (job) => {
-    socket.emit("acceptJob", { job });
+    socket.emit("acceptJob", { job, acceptedBy: user });
+  };
+  const changeUserHandler = (userTo) => {
+    if (userTo !== user) {
+      socket.emit("changeUser", { userTo, userFrom: user });
+      setUser(userTo);
+    }
   };
 
   return (
@@ -57,15 +65,21 @@ function Body() {
       <div className={classes.userSelection}>
         <div
           className={`${classes.user} ${user === "a" ? classes.active : null}`}
-          onClick={() => setUser("a")}
+          onClick={() => changeUserHandler("a")}
         >
           A
         </div>
         <div
           className={`${classes.user} ${user === "b" ? classes.active : null}`}
-          onClick={() => setUser("b")}
+          onClick={() => changeUserHandler("b")}
         >
           B
+        </div>
+        <div
+          className={`${classes.user} ${user === "c" ? classes.active : null}`}
+          onClick={() => changeUserHandler("c")}
+        >
+          C
         </div>
       </div>
       {user === "a" && (
@@ -95,7 +109,7 @@ function Body() {
           </form>
         </div>
       )}
-      {user === "b" && (
+      {(user === "b" || user === "c") && (
         <div className={`${classes.jobPosts} ${classes.bodyBox}`}>
           <div className={classes.jobCardBox}>
             {jobs.map((job, idx) => (
